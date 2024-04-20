@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Booking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        img {
+            display: block;
+            margin: 0 auto 20px;
+            max-width: 200px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"], input[type="date"], input[type="number"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><img src="hair-woman-and-face-logo-and-symbols-free-vector.jpg" alt="Logo"> Room Booking</h1>
+        <form id="bookingForm" onsubmit="return validateForm()" method="post" enctype="text/plain">
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" readonly>
+
+            <label for="checkInDate">Check-in Date:</label>
+            <input type="date" id="checkInDate" name="checkInDate" required>
+
+            <label for="checkOutDate">Check-out Date:</label>
+            <input type="date" id="checkOutDate" name="checkOutDate" required>
+
+            <label for="numPersons">Number of Persons:</label>
+            <input type="number" id="numPersons" name="numPersons" min="1" required>
+
+            <label for="names">Names of Persons:</label>
+            <textarea id="names" name="names" rows="3" required></textarea>
+
+            <label for="aadhaars">Aadhaar Numbers:</label>
+            <textarea id="aadhaars" name="aadhaars" rows="3" required></textarea>
+
+            <input type="submit" value="Book Room">
+        </form>
+    </div>
+
+    <script>
+        // Retrieve email from local storage and fill it into the input field
+        
+        var email = localStorage.getItem('gmail');
+        document.getElementById('email').value = email;
+
+        // Set the form action mailto address
+        var subject = encodeURIComponent("Room Booking");
+        document.getElementById('bookingForm').action = "mailto:" + email + "?subject=" + subject;
+    </script>
+
+    <script>
+        function validateForm() {
+            var checkInDate = document.getElementById('checkInDate').value;
+            var checkOutDate = document.getElementById('checkOutDate').value;
+            var numPersons = document.getElementById('numPersons').value;
+            var names = document.getElementById('names').value;
+            var aadhaars = document.getElementById('aadhaars').value;
+
+            // Basic validation
+            if (checkInDate === "" || checkOutDate === "" || numPersons === "" || names === "" || aadhaars === "") {
+                alert("All fields are required");
+                return false;
+            }
+
+            // Additional validation can be added here
+
+            return true;
+        }
+    </script>
+</body>
+</html>
