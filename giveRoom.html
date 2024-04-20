@@ -166,6 +166,9 @@ button {
     <h1>Room Availability</h1>
     <!-- Form for uploading room details -->
     <form id="roomUploadForm">
+        <label for="roomDescription">Write Flat Description:</label>
+        <input type="text" id="roomDescription" required>
+
         <label for="roomImage">Room Image:</label>
         <input type="file" id="roomImage" accept="image/*" required>
         <br>
@@ -248,6 +251,7 @@ document.getElementById("roomUploadForm").addEventListener("submit", function(ev
     const gmail = document.getElementById("gmail").value;
     const location = document.getElementById("location").value;
     const pricePerDay = document.getElementById("pricePerDay").value;
+    const description = document.getElementById('roomDescription').value;
 
     const storageRef = storage.ref();
     const roomImagesRef = storageRef.child('roomImages/' + roomImage.name); // Change to roomImage
@@ -262,6 +266,7 @@ document.getElementById("roomUploadForm").addEventListener("submit", function(ev
             console.log('File available at', downloadURL);
             // Upload data to Firestore
             return db.collection("rooms").add({
+                description: description,
                 roomImage: downloadURL,
                 availabilityDates: availabilityDates.split(","),
                 contactNumber: contactNumber,
