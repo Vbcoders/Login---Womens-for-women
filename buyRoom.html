@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Availability</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #333;
+            color:white;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: #fff;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-text {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .card-img-top {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            max-height: 200px;
+            object-fit: cover;
+        }
+
+        .row {
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        @media (max-width: 576px) {
+            .card {
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Style for availability dates */
+        .availability {
+            margin-top: 10px;
+        }
+
+        .availability h6 {
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .availability ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .availability li {
+            margin-bottom: 5px;
+            color: #666;
+            background-color: #f0f0f0; /* Background color */
+            padding: 5px 10px; /* Padding */
+            border-radius: 5px; /* Rounded corners */
+        }
+        #text-center {
+            border-radius: 50%;
+            width: 200px;
+            display: block;
+            margin: auto;
+        }
+    </style>
+</head>
+<body >
+    <div class="container">
+        <h1 class="text-center mb-4"><img id="text-center" src="hair-woman-and-face-logo-and-symbols-free-vector.jpg" alt="" srcset="">Buy Rooms</h1>
+        <!-- Search input field and button -->
+        <div class="mb-3">
+            <input type="text" id="locationSearch" class="form-control" placeholder="Search by location">
+            <button class="btn btn-primary mt-2" onclick="searchByLocation()">Search</button>
+        </div>
+        <!-- Room data will be displayed here -->
+        <div id="roomList" class="row">
+            <!-- Room data will be displayed here -->
+        </div>
+    </div>
+
+    <!-- Firebase JavaScript -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBEw7edw-jRq47N_d1fJUvBSVnROJ6eCcE",
+            authDomain: "messanger-817c9.firebaseapp.com",
+            databaseURL: "https://messanger-817c9-default-rtdb.firebaseio.com",
+            projectId: "messanger-817c9",
+            storageBucket: "messanger-817c9.appspot.com",
+            messagingSenderId: "678307855723",
+            appId: "1:678307855723:web:ac21ee338a71dd34f9602e",
+            measurementId: "G-37SG00MKXC"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Function to fetch and display room data
+        function fetchRooms() {
+            const roomList = document.getElementById('roomList');
+            roomList.innerHTML = ''; // Clear previous data
+
+            db.collection("rooms")
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        const roomData = doc.data();
+                        // Create card for each room
+                        const card = document.createElement('div');
+                        card.classList.add('col-md-4', 'mb-4');
+                        card.innerHTML = `
+                            <div class="card">
+                                <img src="${roomData.roomImage}" class="card-img-top" alt="Room Image">
+                                <div class="card-body">
+                                    <h5 class="card-title">${roomData.description}</h5>
+                                    <p class="card-text">Location: ${roomData.location}</p>
+                                    <p class="card-text">Rs : ${roomData.pricePerDay} per day</p>
+                                    <div class="availability">
+                                        <h6>Available Dates:</h6>
+                                        <ul>
+                                            ${roomData.availabilityDates.map(date => `<li>${date}</li>`).join('')}
+                                        </ul>
+                                    </div>
+                                    <p class="card-text">Contact: ${roomData.contactNumber}</p>
+                                </div>
+                            </div>
+                        `;
+                        roomList.appendChild(card);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error getting room data: ", error);
+                });
+        }
+
+        // Fetch room data on page load
+        fetchRooms();
+
+        // Function to search rooms by location
+        function searchByLocation() {
+            const searchInput = document.getElementById('locationSearch').value.toLowerCase();
+            const roomList = document.getElementById('roomList');
+            roomList.innerHTML = ''; // Clear previous data
+
+            db.collection("rooms")
+                .where("location", "==", searchInput)
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        const roomData = doc.data();
+                        // Create card for each room
+                        const card = document.createElement('div');
+                        card.classList.add('col-md-4', 'mb-4');
+                        card.innerHTML = `
+                            <div class="card">
+                                <img src="${roomData.roomImage}" class="card-img-top" alt="Room Image">
+                                <div class="card-body">
+                                    <h5 class="card-title">${roomData.description}</h5>
+                                    <p class="card-text">Location: ${roomData.location}</p>
+                                    <p class="card-text">Rs : ${roomData.pricePerDay} per day</p>
+                                    <div class="availability">
+                                        <h6>Available Dates:</h6>
+                                        <ul>
+                                            ${roomData.availabilityDates.map(date => `<li>${date}</li>`).join('')}
+                                        </ul>
+                                    </div>
+                                    <p class="card-text">Contact: ${roomData.contactNumber}</p>
+                                </div>
+                            </div>
+                        `;
+                        roomList.appendChild(card);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error searching room data: ", error);
+                });
+        }
+    </script>
+</body>
+</html>
