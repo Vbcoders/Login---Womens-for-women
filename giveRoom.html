@@ -254,7 +254,7 @@ document.getElementById("roomUploadForm").addEventListener("submit", function(ev
     const description = document.getElementById('roomDescription').value;
 
     const storageRef = storage.ref();
-    const roomImagesRef = storageRef.child('roomImages/' + roomImage.name); // Change to roomImage
+    const roomImagesRef = storageRef.child('roomImages/' + roomImageFile.name); // Change to roomImage
     roomImagesRef.put(roomImageFile)
         .then((snapshot) => {
             console.log('Room image uploaded successfully');
