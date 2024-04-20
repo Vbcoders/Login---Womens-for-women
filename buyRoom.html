@@ -10,7 +10,7 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #333;
-            color:white;
+            color: white;
         }
 
         .container {
@@ -37,7 +37,7 @@
         }
 
         .card-text {
-            color: #666;
+            color: blue;
             font-size: 0.9rem;
             margin-bottom: 0.2rem;
         }
@@ -82,15 +82,17 @@
             padding: 5px 10px; /* Padding */
             border-radius: 5px; /* Rounded corners */
         }
+
         #text-center {
             border-radius: 50%;
             width: 200px;
             display: block;
             margin: auto;
         }
+
     </style>
 </head>
-<body >
+<body>
     <div class="container">
         <h1 class="text-center mb-4"><img id="text-center" src="hair-woman-and-face-logo-and-symbols-free-vector.jpg" alt="" srcset="">Buy Rooms</h1>
         <!-- Search input field and button -->
@@ -101,6 +103,26 @@
         <!-- Room data will be displayed here -->
         <div id="roomList" class="row">
             <!-- Room data will be displayed here -->
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="roomModal" tabindex="-1" role="dialog" aria-labelledby="roomModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="roomModalLabel">Room Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="roomDetails"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -150,7 +172,11 @@
                                             ${roomData.availabilityDates.map(date => `<li>${date}</li>`).join('')}
                                         </ul>
                                     </div>
-                                    <p class="card-text">Contact: ${roomData.contactNumber}</p>
+                                    <center>
+                                    <a href="tel:${roomData.contactNumber}" class="card-text">Contact : ${roomData.contactNumber}</a>
+                                    <br>
+                            <button class="btn btn-primary" onclick="bookRoom('${roomData.gmail}')">Book Now</button>
+                            </center>
                                 </div>
                             </div>
                         `;
@@ -162,6 +188,16 @@
                 });
         }
 
+// Function to book a room and redirect to another page
+
+function bookRoom(roomId) {
+    // You can implement the booking logic here
+    // For demonstration, let's redirect to a confirmation page
+    window.location.href = "bookRoom.html";
+    localStorage.setItem('gmail',roomId);
+}
+
+    
         // Fetch room data on page load
         fetchRooms();
 
