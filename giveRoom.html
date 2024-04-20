@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Availability</title>
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <style>
+       body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+  background-color: white;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="file"],
+input[type="tel"],
+input[type="email"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+input[type="file"] {
+    width: auto;
+    cursor: pointer;
+}
+
+input[type="submit"] {
+    width: 100%;
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.flatpickr-calendar {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.selected:focus,
+.flatpickr-day.selected:hover {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+.flatpickr-month {
+    color: #333;
+}
+
+.flatpickr-prev-month,
+.flatpickr-next-month {
+    color: #aaa;
+}
+
+.flatpickr-monthDropdown-months,
+.flatpickr-yearDropdown-years {
+    color: #333;
+}
+
+.flatpickr-prev-month:hover,
+.flatpickr-next-month:hover {
+    color: #666;
+}
+
+.flatpickr-day.today {
+    background-color: #f2f2f2;
+}
+
+.flatpickr-monthYear {
+    color: #333;
+}
+
+.flatpickr-monthYear-wrap:hover .flatpickr-monthYear {
+    color: #666;
+}
+
+.flatpickr-weekdays {
+    background-color: #f2f2f2;
+}
+
+.flatpickr-weekday {
+    color: #333;
+}
+
+.flatpickr-weekdaycontainer {
+    background-color: #f2f2f2;
+}
+
+.flatpickr-time {
+    display: none;
+}
+
+.upload-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px; /* Adjust as needed */
+}
+button {
+        width: 100%;
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 10px; /* Add margin bottom to separate buttons */
+    }
+
+    /* Style for buttons on hover */
+    button:hover {
+        background-color: #45a049;
+    }
+
+    /* Style for the "Get Current Location" button */
+    #getLocationButton {
+        margin-top: 20px; /* Add margin top to separate it from other buttons */
+    }
+
+    /* Flex container to center buttons */
+    .button-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    </style>
+    <h1>Room Availability</h1>
+    <!-- Form for uploading room details -->
+    <form id="roomUploadForm">
+        <label for="roomImage">Room Image:</label>
+        <input type="file" id="roomImage" accept="image/*" required>
+        <br>
+        <label for="availabilityDates">Availability Dates:</label>
+        <input type="text" id="availabilityDates" required>
+        <br>
+        <label for="contactNumber">Contact Mobile Number:</label>
+        <input type="tel" id="contactNumber" required>
+        <br>
+        <label for="gmail">Gmail:</label>
+        <input type="email" id="gmail" required>
+        <br>
+        <label for="username">Username:</label>
+        <input type="text" id="username" required readonly> <!-- Readonly attribute added -->
+        <br>
+        <label for="profilePic">Profile Picture URL:</label>
+        <input type="text" id="profilePic" required readonly> <!-- Readonly attribute added -->
+        <br>
+        <label for="location">Location:</label>
+        <input type="text" id="location" required>
+        <button onclick="getLocation()">Get Current Location</button> <!-- Button to get current location -->
+        <br>
+        <label for="pricePerDay">Price per Day:</label>
+        <input type="number" id="pricePerDay" required>
+        <br>
+        <button type="submit">Upload Room Details</button>
+    </form>
+    <h3 id="finalResult"></h3>
+
+    <!-- Flatpickr JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <script>
+
+        var result = document.getElementById('finalResult');
+        const firebaseConfig = {
+            apiKey: "AIzaSyBEw7edw-jRq47N_d1fJUvBSVnROJ6eCcE",
+            authDomain: "messanger-817c9.firebaseapp.com",
+            databaseURL: "https://messanger-817c9-default-rtdb.firebaseio.com",
+            projectId: "messanger-817c9",
+            storageBucket: "messanger-817c9.appspot.com",
+            messagingSenderId: "678307855723",
+            appId: "1:678307855723:web:ac21ee338a71dd34f9602e",
+            measurementId: "G-37SG00MKXC"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // Function to retrieve username and profile picture URL from local storage
+        function getProfileInfo() {
+            const username = localStorage.getItem('name');
+            const profilePicUrl = localStorage.getItem('profilePicUrl');
+            // Fill the input fields with retrieved values
+            document.getElementById('username').value = username || '';
+            document.getElementById('profilePic').value = profilePicUrl || '';
+        }
+
+        // Call the function to fill profile information on page load
+        window.addEventListener('load', getProfileInfo);
+
+        // Initialize Flatpickr for selecting multiple dates
+        flatpickr("#availabilityDates", {
+            mode: "multiple",
+            dateFormat: "Y-m-d",
+            minDate: "today",
+            // You can add more options as needed
+        });
+
+         // Function to handle form submission
+document.getElementById("roomUploadForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    // Get form values
+    const roomImageFile = document.getElementById("roomImage").files[0]; // Change to roomImage
+    const availabilityDates = document.getElementById("availabilityDates").value;
+    const contactNumber = document.getElementById("contactNumber").value;
+    const gmail = document.getElementById("gmail").value;
+    const location = document.getElementById("location").value;
+    const pricePerDay = document.getElementById("pricePerDay").value;
+
+    const storageRef = storage.ref();
+    const roomImagesRef = storageRef.child('roomImages/' + roomImage.name); // Change to roomImage
+    roomImagesRef.put(roomImageFile)
+        .then((snapshot) => {
+            console.log('Room image uploaded successfully');
+            result.innerHTML="image uploaded successfully";
+            // Get the download URL of the uploaded image
+            return snapshot.ref.getDownloadURL();
+        })
+        .then((downloadURL) => {
+            console.log('File available at', downloadURL);
+            // Upload data to Firestore
+            return db.collection("rooms").add({
+                roomImage: downloadURL,
+                availabilityDates: availabilityDates.split(","),
+                contactNumber: contactNumber,
+                gmail: gmail,
+                username: document.getElementById("username").value,
+                profilePic: document.getElementById("profilePic").value,
+                location: location,
+                pricePerDay: parseFloat(pricePerDay)
+            });
+        })
+        .then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
+            result.innerHTML="Document written with ID: "+ docRef.id;
+            // Reset the form after successful submission
+            document.getElementById("roomUploadForm").reset();
+        })
+        .catch((error) => {
+            console.error("Error adding document: ", error);
+        });
+});
+
+
+
+        // Function to get current location using HTML5 Geolocation API
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function showPosition(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            const locationUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+            document.getElementById('location').value = locationUrl;
+        }
+    </script>
+</body>
+</html>
