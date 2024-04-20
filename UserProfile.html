@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        body {
+            margin: 10px;
+            padding: 0;
+            background-image: url('https://i.pinimg.com/originals/31/9e/fa/319efa455953f46339be8705b2c7e41a.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            align-items: center;
+           
+        }
+        
+        .profile-container {
+            background-color: whitesmoke;
+            padding: 10px;
+            margin-top: 100px;
+            width: 90%;
+            border-radius: 10px;
+            position: relative; /* Relative positioning for absolute positioning of the image */
+            text-align: center;
+            box-shadow: 2px 2px 12px black;
+        }
+
+        h2 {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size: 50px;
+            font-weight: 800;
+            font-style: bold;
+            color: black;
+            margin-bottom: 20px;
+        }
+
+        .profile-image {
+           border-radius: 50%;
+           box-shadow: 2px 2px 12px black;
+        }
+        .profile-image:hover{
+           border-radius: 50%;
+           box-shadow: 2px 2px 12px blue;
+           cursor: pointer;
+        }
+        .profile-container2{
+            background-color: whitesmoke;
+            padding: 10px;
+            margin: 100px;
+            border-radius: 10px;
+            position: relative; /* Relative positioning for absolute positioning of the image */
+            text-align: center;
+            box-shadow: 2px 2px 12px black;
+        }
+        .profile-container3{
+            background-color: whitesmoke;
+            padding: 10px;
+            margin: 100px;
+            border-radius: 10px;
+            position: relative; /* Relative positioning for absolute positioning of the image */
+            text-align: center;
+            box-shadow: 2px 2px 12px black;
+        }
+        .profile-container2,.profile-container3{
+            display: inline-block;
+
+        }
+        .profile-container2:hover{
+            box-shadow: 2px 2px 12px blue;
+            cursor: pointer;
+        }
+        .profile-container3:hover{
+            box-shadow: 2px 2px 12px blue;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <center>
+<div class="profile-container">
+    <img  class="profile-image" onclick="profile()" src="" id="img" alt="Profile Picture">
+    <h2>Welcome to Women for Women</h2>
+</div>
+<br>
+
+<div class="profile-container2" onclick="giveRoom()">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNyvo769BFu_8NsqSgvaag12FrTrdadxPsV-kcdkzytcQJoIBWRIZlYWT7Xynr5W7ovxk&usqp=CAU" alt="rents available">
+    <h1>Share Room to Women</h1>
+</div>
+<div  class="profile-container3" onclick="buyRoom()">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtXdM7TrMXHqT71y4TI_9vhM5_GIVGn7t9B0ZsgmLmHVJsUJHtWVxKpcnLugaFjVrFFUQ&usqp=CAU" alt="Room rent.jpg">
+    <h1>Rent Room for Women</h1>
+</div>
+</center>
+<script>
+    // Retrieve username and profile picture URL from local storage
+    var username = localStorage.getItem('name');
+    var profilePicUrl = localStorage.getItem('profilePicUrl');
+
+    // Update the DOM with the retrieved data
+    document.querySelector('.profile-image').src = profilePicUrl;
+    function giveRoom(){
+        window.location.href = 'giveRoom.html';
+    }
+    function buyRoom(){
+        window.location.href = 'buyRoom.html';
+    }
+    function profile(){
+        window.location.href = 'profile.html'; 
+    }
+        
+</script>
+</body>
+</html>
