@@ -58,14 +58,21 @@
         input[type="submit"]:hover {
             background-color: #0056b3;
         }
+        p{
+            color:red;
+            font-size:10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1><img src="hair-woman-and-face-logo-and-symbols-free-vector.jpg" alt="Logo"> Room Booking</h1>
         <form id="bookingForm" onsubmit="return validateForm()" method="post" enctype="text/plain">
-            <label for="email">Email:</label>
-            <input type="text" id="email" name="email" readonly>
+            <center>
+            <p>Only Womens are allowed !</p>
+                </center>
+            <label for="gmail">Gmail:</label>
+            <input type="text" id="gmail" name="gmail" readonly>
 
             <label for="checkInDate">Check-in Date:</label>
             <input type="date" id="checkInDate" name="checkInDate" required>
@@ -81,6 +88,7 @@
 
             <label for="aadhaars">Aadhaar Numbers:</label>
             <textarea id="aadhaars" name="aadhaars" rows="3" required></textarea>
+            <p>Please enter valid adhaar numbers only womens are allowed others will rejected shortly !</p>
 
             <input type="submit" value="Book Room">
         </form>
